@@ -36,7 +36,14 @@ module.exports = {
   ],
   optimization: {},
   resolve: {
-    modules: ['node_modules'],
     extensions: ['.js', '.json', '.jsx', '.css'],
+  //   modules: [path.join(__dirname, '../node_modules'),
+  //   ],
+  },
+  devServer: {
+    host: 'localhost',
+    historyApiFallback: true,
+    // port: port,
+    // hot: true,
   },
 };
