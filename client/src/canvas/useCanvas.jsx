@@ -7,7 +7,6 @@ const useCanvas = (draw, initialize, addEvents, removeEvents) => {
     let canvas = canvasRef.current
     const context = canvas.getContext('2d')
 
-
     let state = initialize();
     addEvents(state, canvas, canvasRef);
 

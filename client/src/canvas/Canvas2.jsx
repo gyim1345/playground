@@ -7,25 +7,25 @@ const Canvas2 = () => {
   const width = 480;
   const height = 320;
   function initialize() {
-    let ballRadius = 10;
-    let x = width / 2;
-    let y = height - 30;
-    let dx = 2;
-    let dy = -2;
-    let paddleHeight = 10;
-    let paddleWidth = 75;
-    let paddleX = (width - paddleWidth) / 2;
-    let rightPressed = false;
-    let leftPressed = false;
-    let brickRowCount = 5;
-    let brickColumnCount = 3;
-    let brickWidth = 75;
-    let brickHeight = 20;
-    let brickPadding = 10;
-    let brickOffsetTop = 30;
-    let brickOffsetLeft = 30;
-    let score = 0;
-    let lives = 3;
+    const ballRadius = 10;
+    const x = width / 2;
+    const y = height - 30;
+    const dx = 2;
+    const dy = -2;
+    const paddleHeight = 10;
+    const paddleWidth = 75;
+    const paddleX = (width - paddleWidth) / 2;
+    const rightPressed = false;
+    const leftPressed = false;
+    const brickRowCount = 5;
+    const brickColumnCount = 3;
+    const brickWidth = 75;
+    const brickHeight = 20;
+    const brickPadding = 10;
+    const brickOffsetTop = 30;
+    const brickOffsetLeft = 30;
+    const score = 0;
+    const lives = 3;
 
     let bricks = [];
     for (let c = 0; c < brickColumnCount; c++) {
@@ -34,16 +34,9 @@ const Canvas2 = () => {
         bricks[c][r] = { x: 0, y: 0, status: 1 };
       }
     }
-    document.addEventListener("keydown", keyDownHandler, false);
-    document.addEventListener("keyup", keyUpHandler, false);
-    document.addEventListener("mousemove", mouseMoveHandler, false);
 
-    function removeHandler() {
-      document.removeEventListener("keydown", keyDownHandler, false);
-      document.removeEventListener("keyup", keyUpHandler, false);
-      document.removeEventListener("mousemove", mouseMoveHandler, false);
-    }
-    return { ballRadius, x, y, dx, dy, paddleHeight, paddleWidth, paddleX, rightPressed, leftPressed, brickRowCount, brickColumnCount, brickWidth, brickHeight, brickPadding, brickOffsetTop, brickOffsetLeft, score, lives, bricks, removeHandler };
+
+    return { ballRadius, x, y, dx, dy, paddleHeight, paddleWidth, paddleX, rightPressed, leftPressed, brickRowCount, brickColumnCount, brickWidth, brickHeight, brickPadding, brickOffsetTop, brickOffsetLeft, score, lives, bricks };
   }
 
   function addEvents(state, canvas) {
@@ -61,21 +54,26 @@ const Canvas2 = () => {
   function keyDownHandler(e, state) {
     if (e.key == "Right" || e.key == "ArrowRight") {
       state.rightPressed = true;
-    } else if (e.key == "Left" || e.key == "ArrowLeft") {
+    }
+    if (e.key == "Left" || e.key == "ArrowLeft") {
       state.leftPressed = true;
+    }
+    if (e.key === "Escape") {
+      alert('Paused')
     }
   }
 
   function keyUpHandler(e, state) {
     if (e.key == "Right" || e.key == "ArrowRight") {
       state.rightPressed = false;
-    } else if (e.key == "Left" || e.key == "ArrowLeft") {
+    }
+    if (e.key == "Left" || e.key == "ArrowLeft") {
       state.leftPressed = false;
     }
   }
 
   function mouseMoveHandler(e, state, canvas) {
-    let relativeX = e.clientX - canvas?.offsetLeft;
+    let relativeX = e.clientX - canvas.offsetLeft;
     if (relativeX > 0 && relativeX < width) {
       state.paddleX = relativeX - state.paddleWidth / 2;
     }
@@ -100,7 +98,8 @@ const Canvas2 = () => {
     }
   }
 
-  function drawBall(ctx, x, y, ballRadius) {
+  function drawBall(ctx, state) {
+    const { x, y, ballRadius } = state;
     ctx.beginPath();
     ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
     ctx.fillStyle = "#0095DD";
@@ -108,7 +107,8 @@ const Canvas2 = () => {
     ctx.closePath();
   }
 
-  function drawPaddle(ctx, paddleX, height, paddleHeight, paddleWidth) {
+  function drawPaddle(ctx, state) {
+    const { paddleX, paddleHeight, paddleWidth } = state;
     ctx.beginPath();
     ctx.rect(paddleX, height - paddleHeight, paddleWidth, paddleHeight);
     ctx.fillStyle = "#0095DD";
@@ -116,7 +116,9 @@ const Canvas2 = () => {
     ctx.closePath();
   }
 
-  function drawBricks(ctx, brickColumnCount, brickRowCount, bricks, brickWidth, brickPadding, brickHeight, brickOffsetLeft, brickOffsetTop) {
+  function drawBricks(ctx, state) {
+    const { brickColumnCount, brickRowCount, bricks, brickWidth, brickPadding, brickHeight, brickOffsetLeft, brickOffsetTop } = state;
+
     for (let c = 0; c < brickColumnCount; c++) {
       for (let r = 0; r < brickRowCount; r++) {
         if (bricks[c][r].status == 1) {
@@ -146,20 +148,8 @@ const Canvas2 = () => {
     ctx.fillText("Lives: " + lives, width - 65, 20);
   }
 
-  function draw(ctx, frameCount, state) {
-    ctx.clearRect(0, 0, width, height);
-
-    let { ballRadius, x, y, dx, dy, paddleHeight, paddleWidth, paddleX, rightPressed, leftPressed, brickRowCount, brickColumnCount, brickWidth, brickHeight, brickPadding, brickOffsetTop, brickOffsetLeft, score, lives, bricks } = state;
-
-    drawBricks(ctx, brickColumnCount, brickRowCount, bricks, brickWidth, brickPadding, brickHeight, brickOffsetLeft, brickOffsetTop);
-
-    drawBall(ctx, x, y, ballRadius, frameCount);
-
-    drawPaddle(ctx, paddleX, height, paddleHeight, paddleWidth);
-    drawScore(ctx, score);
-    drawLives(ctx, lives, width);
-    collisionDetection(state);
-
+  function updateObjects(state) {
+    const { x, dx, y, dy, paddleX, paddleWidth, ballRadius, rightPressed, leftPressed } = state;
     if (x + dx > width - ballRadius || x + dx < ballRadius) {
       state.dx = -dx;
     }
@@ -186,7 +176,6 @@ const Canvas2 = () => {
     }
 
     if (rightPressed && paddleX < width - paddleWidth) {
-
       state.paddleX += 7;
     } else if (leftPressed && paddleX > 0) {
       state.paddleX -= 7;
@@ -194,11 +183,22 @@ const Canvas2 = () => {
 
     state.x += dx;
     state.y += dy;
-    // requestAnimationFrame(draw);
+  }
+
+  function draw(ctx, frameCount, state) {
+    ctx.clearRect(0, 0, width, height);
+
+    drawBricks(ctx, state);
+    drawBall(ctx, state);
+    drawPaddle(ctx, state);
+    drawScore(ctx, state.score);
+    drawLives(ctx, state.lives, width);
+    collisionDetection(state);
+    updateObjects(state);
   }
 
   const canvasRef = useCanvas(draw, initialize, addEvents, removeEvents)
-  return <canvas ref={canvasRef} width="480" height="320"/>
+  return <canvas ref={canvasRef} width={width} height={height}/>
 }
 
 export default Canvas2;
