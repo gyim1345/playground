@@ -26,23 +26,6 @@ https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio
 - In the draw function, there is some procedures that we might want execute for every animation, like clear the canvas or increment the frame counter. We could abstract this procedures to special functions that will be executed before and after the draw: the predraw and postdraw functions. This way we can write less code every time we want to create a different animation. These functions must be called (obviously) inside of the render function, before and after the draw function.
 
 
-## canvas undefined (eventhandler)
-- mouse event에 canvas를 보내줬는데도 canvas가 undefined => defined => undefined 가 뜬다...... 왜 그런지는 모르겠네....
-- addevent를 두번 했다. 리팩토링 할때 initialize안에 있던것을 따로 함수로 만들었는데 함수로 만든걸 쓰면서 initialize 안에 있던걸 안지웠엇네...
-
 ## Canvas2
 
 https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript
-
-
-
-## todo
-
-- 화면 크기에 따라 canvas 크기 변경 및 안에 있는 물건들 변경
-- paddle 과 ball 충돌시에 튕기는 위치 및 속도 수정?? 
-- 공과 패들 충돌 위치 수정
-- 일시정지...
-  - 일단 esc 누르면 alert으로 대쳐 ㅋㅋㅋㅋㅋㅋㅋ
-- brick 갯수 랜덤화 및 위치 랜덤화 혹은 유저 선택 입력 가능하도록 변경
-- 리팩토링
-  - 할건 많은데 어디서 부터 손을 대야할지 ㄷㄷ;
