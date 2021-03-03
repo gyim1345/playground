@@ -7,6 +7,7 @@ const IndexPage = () => {
       <nav>
         <Link to={"/canvas"}>
           <p>canvas</p>
+          <img src='/public/images/a.png' ></img>
         </Link>
       </nav>
     </>
